@@ -116,13 +116,13 @@
 #define PACKAGE_NAME "lux"
 
 /* Define to the full name and version of this package. */
-#define PACKAGE_STRING "lux 0.1"
+#define PACKAGE_STRING "lux 0.9"
 
 /* Define to the one symbol short name of this package. */
 #define PACKAGE_TARNAME "lux"
 
 /* Define to the version of this package. */
-#define PACKAGE_VERSION "0.1"
+#define PACKAGE_VERSION "0.9"
 
 /* Define to 1 if the `S_IS*' macros in <sys/stat.h> do not work properly. */
 /* #undef STAT_MACROS_BROKEN */
@@ -137,7 +137,7 @@
 #define USE_ZLIB 1
 
 /* Version number of package */
-#define VERSION "0.1"
+#define VERSION "0.9"
 
 /* Number of bits in a file offset, on hosts where this is settable. */
 #define _FILE_OFFSET_BITS 64

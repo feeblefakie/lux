@@ -4,7 +4,6 @@
 #include "QueryParser.h"
 #include "lux/Document/Document.h"
 #include "lux/Storage/InvertedIndex.h"
-#include "lux/Storage/mytime.h"
 
 namespace Lux {
 

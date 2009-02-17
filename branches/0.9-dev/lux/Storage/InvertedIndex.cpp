@@ -5,7 +5,6 @@
 #include "lux/Query/PhraseQuery.h"
 #include "lux/Query/BooleanQuery.h"
 #include <iostream>
-#include "mytime.h"
 
 namespace Lux {
 
