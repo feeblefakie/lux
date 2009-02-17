@@ -1,0 +1,11 @@
+1. 検索対象のブログ記事を用意 (blogs.txt)
+    - 各行が、記事IDブログID投稿日URLタイトル本文
+      となっていると、付属のプログラムをそのまま使えます
+
+2. blogs.document.conf を /etc/lux 以下に配置
+
+3. make
+
+4. ./index < blogs.txt
+
+5. ./search "google"
