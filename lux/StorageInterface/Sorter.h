@@ -3,7 +3,6 @@
 
 #include "lux/lux.h"
 #include "Condition.h"
-#include "lux/Storage/IndexResult.h"
 #include <vector>
 #include <functional>
 #include <algorithm>
@@ -26,68 +25,98 @@ namespace Lux {
       }
   };
   template <class T>
-  struct sort_by_attr_desc : public std::binary_function<T, T, bool>
+  struct sort_by_attr_int_desc : public std::binary_function<T, T, bool>
   {
       bool operator()(T &t1, T &t2) {
-        return t1.attr > t2.attr;
+        return *(int *) t1.attr > *(int *) t2.attr;
       }
   };
   template <class T>
-  struct sort_by_attr_asc : public std::binary_function<T, T, bool>
+  struct sort_by_attr_int_asc : public std::binary_function<T, T, bool>
   {
       bool operator()(T &t1, T &t2) {
-        return t1.attr < t2.attr;
+        return *(int *) t1.attr < *(int *) t2.attr;
+      }
+  };
+  template <class T>
+  struct sort_by_attr_str_desc : public std::binary_function<T, T, bool>
+  {
+      bool operator()(T &t1, T &t2) {
+        return strcmp((char *) t1.attr, (char *) t2.attr) > 0;
+      }
+  };
+  template <class T>
+  struct sort_by_attr_str_asc : public std::binary_function<T, T, bool>
+  {
+      bool operator()(T &t1, T &t2) {
+        return strcmp((char *) t1.attr, (char *) t2.attr) < 0;
       }
   };
 
+  template <class T>
   class Sorter {
 
   public:
-    Sorter(sort_t sort_type, uint_t num_of_sorted)
-    : sort_type_(sort_type), num_of_sorted_(num_of_sorted)
+    Sorter(SortCondition sort, uint32_t num_of_sorted)
+    : sort_(sort), num_of_sorted_(num_of_sorted)
     {}
     ~Sorter(void) {}
-    void sort(IndexResultSet &rs)
+    void sort(std::vector<T> &rs)
     {
       /**
        * [TODO] BAD CODE. only functor should be selected in the case clause.
        */
-      switch (sort_type_) {
-        case SORT_SCORE_ASC:
-          partial_sort(rs.begin(),
-                       rs.begin() + num_of_sorted_,
-                       rs.end(),
-                       sort_by_score_asc<IndexResult>());
+      switch (sort_.attr_type) {
+        case SORT_SCORE:
+          if (sort_.order_type == DESC) {
+            partial_sort(rs.begin(),
+                         rs.begin() + num_of_sorted_,
+                         rs.end(),
+                         sort_by_score_desc<T>());
+          } else {
+            partial_sort(rs.begin(),
+                         rs.begin() + num_of_sorted_,
+                         rs.end(),
+                         sort_by_score_asc<T>());
+          }
           break;
-        case SORT_SCORE_DESC:
-          partial_sort(rs.begin(),
-                       rs.begin() + num_of_sorted_,
-                       rs.end(),
-                       sort_by_score_desc<IndexResult>());
+        case SORT_ATTR_INT:
+          if (sort_.order_type == DESC) {
+            partial_sort(rs.begin(),
+                         rs.begin() + num_of_sorted_,
+                         rs.end(),
+                         sort_by_attr_int_desc<T>());
+          } else {
+            partial_sort(rs.begin(),
+                         rs.begin() + num_of_sorted_,
+                         rs.end(),
+                         sort_by_attr_int_asc<T>());
+          }
           break;
-        case SORT_ATTR_DESC:
-          partial_sort(rs.begin(),
-                       rs.begin() + num_of_sorted_,
-                       rs.end(),
-                       sort_by_attr_desc<IndexResult>());
-          break;
-        case SORT_ATTR_ASC:
-          partial_sort(rs.begin(),
-                       rs.begin() + num_of_sorted_,
-                       rs.end(),
-                       sort_by_attr_asc<IndexResult>());
+        case SORT_ATTR_STR:
+          if (sort_.order_type == DESC) {
+            partial_sort(rs.begin(),
+                         rs.begin() + num_of_sorted_,
+                         rs.end(),
+                         sort_by_attr_str_desc<T>());
+          } else {
+            partial_sort(rs.begin(),
+                         rs.begin() + num_of_sorted_,
+                         rs.end(),
+                         sort_by_attr_str_asc<T>());
+          }
           break;
         default:
           partial_sort(rs.begin(),
                        rs.begin() + num_of_sorted_,
                        rs.end(),
-                       sort_by_score_desc<IndexResult>());
+                       sort_by_score_desc<T>());
       }
     }
 
   private:
-    sort_t sort_type_;
-    uint_t num_of_sorted_;
+    SortCondition sort_;
+    uint32_t num_of_sorted_;
   };
 
 }

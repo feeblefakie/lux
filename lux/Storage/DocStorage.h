@@ -1,7 +1,7 @@
 #ifndef LUX_DOCSTORAGE_H
 #define LUX_DOCSTORAGE_H
 
-#include "DocStorageHash.h"
+#include "DocStorageArray.h"
 
 namespace Lux {
 
@@ -9,13 +9,12 @@ namespace Lux {
   class DocStorage : public DocStoragePolicy {
 
   public:
-    DocStorage(std::string storage_dir, db_flags_t open_params,
-               DocumentDefinition &doc_def)
-    : DocStoragePolicy(storage_dir, open_params, doc_def)
+    DocStorage(Config::Document &doc_config)
+    : DocStoragePolicy(doc_config)
     {}
   };
 }
 
-typedef Lux::DocStorage<Lux::DocStorageHash> LuxDocStorage;
+typedef Lux::DocStorage<Lux::DocStorageArray> LuxDocStorage;
 
 #endif

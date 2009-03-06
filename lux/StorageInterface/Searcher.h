@@ -3,29 +3,36 @@
 
 #include "lux/lux.h"
 #include "Result.h"
-#include "lux/Storage/DocStorage.h"
-#include "lux/StorageEngine/StorageEngine.h"
-#include "lux/scoped_ptr.h"
+#include "Engine.h"
+#include "lux/Storage/IndexResult.h"
 #include <string>
 
 namespace Lux {
   
   class Condition;
-  class SearchIndex;
   class DocumentDefinition;
 
   class Searcher {
 
   public:
-    Searcher(std::string storage_dir, DocumentDefinition &doc_def);
+    Searcher(Engine &engine);
     ~Searcher(); 
+    bool open(void);
+    bool close(void);
+    void set_sys_cond(sys_cond_t sys_cond);
     ResultSet search(const char *query, Condition &cond);
-    ResultSet search(std::string query, Condition &cond);
+    ResultSet search(const std::string &query, Condition &cond);
+    IndexResultSet search_by_server(const char *query, Condition &cond);
+    IndexResultSet search_by_server(const std::string &query, Condition &cond);
+    std::string getdoc_by_server(doc_id_t doc_id);
+    // [FIXME] this shouldn't be public. (needed by server)
+    void clear_attrs(IndexResultSet &irs, Condition &cond);
 
   private:
-    scoped_ptr<LuxHashStorage> lhs_;
-    scoped_ptr<LuxDocStorage> ds_;
-    scoped_ptr<SearchIndex> si_;
+    Engine engine_;
+
+    IndexResultSet search_index(const std::string &query);
+    void set_attrs(IndexResultSet &irs, Condition &cond);
   };
 }
 

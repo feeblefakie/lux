@@ -1,7 +1,6 @@
 #ifndef LUX_DOCUMENT_H
 #define LUX_DOCUMENT_H
 
-#include "lux/luxconfig.h"
 #include "lux/lux.h"
 #include "Field.h"
 #include <vector>
@@ -12,6 +11,9 @@
 #elif HAVE_BOOST_SHARED_PTR_HPP
 #include <boost/shared_ptr.hpp>
 #endif
+
+#define ERR_DOC_ID "__ERRDOC__"
+
 namespace Lux {
 
 #ifdef HAVE_TR1_MEMORY
@@ -26,10 +28,12 @@ namespace Lux {
       
   public:
     Document(char *id)
-    : external_id_(id) {}
+    : external_id_(id)
+    {}
 
     Document(std::string &id)
-    : external_id_(id) {};
+    : external_id_(id)
+    {}
 
     Document(const Document &doc)
     : external_id_(doc.external_id_), fields_(doc.fields_)
@@ -89,27 +93,27 @@ namespace Lux {
       fields_iterator_ = fields_.begin();
     }
 
-    const std::string get_external_id(void)
+    const std::string get_eid(void)
     {
-      return static_cast<const Document&>(*this).get_external_id();
+      return static_cast<const Document&>(*this).get_eid();
     }
 
-    const std::string get_external_id(void) const
+    const std::string get_eid(void) const
     {
       return external_id_;
     }
 
-    void set_internal_id(doc_id_t internal_id)
+    void set_id(doc_id_t internal_id)
     {
       internal_id_ = internal_id;
     }
 
-    const doc_id_t get_internal_id(void)
+    const doc_id_t get_id(void)
     {
-      return static_cast<const Document&>(*this).get_internal_id();
+      return static_cast<const Document&>(*this).get_id();
     }
 
-    const doc_id_t get_internal_id(void) const
+    const doc_id_t get_id(void) const
     {
       return internal_id_;
     }

@@ -4,15 +4,18 @@ INCLUDES = -I. -I./Document -I./Lexer -I./Query -I./StorageEngine \
 lib_LTLIBRARIES = liblux.la
 
 liblux_la_SOURCES = Lexer/MecabMA.cpp Storage/InvertedIndex.cpp \
-                    StorageInterface/Indexer.cpp StorageInterface/Searcher.cpp
+                    StorageInterface/Indexer.cpp StorageInterface/Searcher.cpp \
+					StorageInterface/Engine.cpp StorageInterface/document_config_parser.cpp \
+					Document/document_definition.pb.cpp Storage/vbc.h Storage/posting.h \
+					Storage/Normalizer.h Storage/BooleanMerger.h
 
 liblux_includedir = $(includedir)/lux
-liblux_include_HEADERS = index.h search.h lux.h types.h scoped_ptr.h luxconfig.h
+liblux_include_HEADERS = index.h search.h lux.h types.h luxconfig.h util.h scoped_ptr.h
 
 liblux_document_includedir = $(liblux_includedir)/Document
 liblux_document_include_HEADERS = \
-    Document/Document.h Document/DocumentDefinition.h \
-    Document/Field.h Document/FieldDefinition.h
+    Document/Document.h Document/document_definition.pb.h \
+    Document/Field.h Document/DocumentSerializer.h
 
 liblux_langutil_includedir = $(liblux_includedir)/LangUtil
 liblux_langutil_include_HEADERS = \
@@ -29,21 +32,20 @@ liblux_query_include_HEADERS = \
 
 liblux_storage_includedir = $(liblux_includedir)/Storage
 liblux_storage_include_HEADERS = \
-    Storage/IndexResult.h Storage/SearchIndex.h \
-	Storage/BooleanMerger.h Storage/DocStorage.h \
-    Storage/InvertedIndex.h Storage/Normalizer.h \
-    Storage/DocStorageHash.h Storage/InvertedIndexCore.h \
-    Storage/Posting.h
+    Storage/IndexResult.h Storage/SearchIndex.h Storage/IDManager.h \
+	Storage/DocStorage.h Storage/AttrIndex.h Storage/AttrIndexArray.h \
+    Storage/InvertedIndex.h Storage/DocStorageArray.h Storage/InvertedIndexCore.h
 
 liblux_storageengine_includedir = $(liblux_includedir)/StorageEngine
 liblux_storageengine_include_HEADERS = \
-    StorageEngine/CuriaHash.h StorageEngine/StorageEngineUtil.h \
-    StorageEngine/DataUnit.h StorageEngine/QDBMDataUnit.h \
-    StorageEngine/VillaBtree.h StorageEngine/DepotHash.h \
-    StorageEngine/StorageEngine.h
+    StorageEngine/StorageEngineUtil.h StorageEngine/DataUnit.h \
+	StorageEngine/LIODataUnit.h StorageEngine/StorageEngine.h \
+	StorageEngine/LIOBtree.h StorageEngine/LIOArray.h
 
 liblux_storageinterface_includedir = $(liblux_includedir)/StorageInterface
 liblux_storageinterface_include_HEADERS = \
 	StorageInterface/Condition.h StorageInterface/QueryParser.h \
 	StorageInterface/Searcher.h StorageInterface/Indexer.h \
-	StorageInterface/Result.h StorageInterface/Sorter.h
+	StorageInterface/Result.h StorageInterface/Sorter.h \
+	StorageInterface/Engine.h StorageInterface/Paging.h \
+	StorageInterface/document_config_parser.h

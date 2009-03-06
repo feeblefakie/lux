@@ -11,11 +11,11 @@ namespace Lux {
   public:
     static IndexResultSet AND(IndexResultSet &rs1, IndexResultSet &rs2)
     {
-      IRSIterator itr1 = rs1.begin();
-      IRSIterator itr2 = rs2.begin();
-      IRSIterator itr1_end = rs1.end();
-      IRSIterator itr2_end = rs2.end();
-      IRSIterator itr1_cur, itr2_cur;
+      IRSItr itr1 = rs1.begin();
+      IRSItr itr2 = rs2.begin();
+      IRSItr itr1_end = rs1.end();
+      IRSItr itr2_end = rs2.end();
+      IRSItr itr1_cur, itr2_cur;
       IndexResultSet rs;
 
       if (itr1 == itr1_end || itr2 == itr2_end) {
@@ -49,11 +49,11 @@ namespace Lux {
     
     static IndexResultSet OR(IndexResultSet &rs1, IndexResultSet &rs2)
     {
-      IRSIterator itr1 = rs1.begin();
-      IRSIterator itr2 = rs2.begin();
-      IRSIterator itr1_end = rs1.end();
-      IRSIterator itr2_end = rs2.end();
-      IRSIterator itr1_cur, itr2_cur;
+      IRSItr itr1 = rs1.begin();
+      IRSItr itr2 = rs2.begin();
+      IRSItr itr1_end = rs1.end();
+      IRSItr itr2_end = rs2.end();
+      IRSItr itr1_cur, itr2_cur;
       IndexResultSet rs;
 
       if (itr1 == itr1_end && itr2 == itr2_end) {
@@ -107,11 +107,11 @@ namespace Lux {
 
     static IndexResultSet NOT(IndexResultSet &rs1, IndexResultSet &rs2)
     {
-      IRSIterator itr1 = rs1.begin();
-      IRSIterator itr2 = rs2.begin();
-      IRSIterator itr1_end = rs1.end();
-      IRSIterator itr2_end = rs2.end();
-      IRSIterator itr1_cur, itr2_cur;
+      IRSItr itr1 = rs1.begin();
+      IRSItr itr2 = rs2.begin();
+      IRSItr itr1_end = rs1.end();
+      IRSItr itr2_end = rs2.end();
+      IRSItr itr1_cur, itr2_cur;
       IndexResultSet rs;
 
       if (itr1 == itr1_end) {

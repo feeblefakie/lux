@@ -29,7 +29,17 @@ namespace Lux {
         bool open(const char *filename, db_flags_t open_flags)
         {
             assert(filename);
-            unsigned int oflags = 0;
+            int oflags = 0;
+
+            // when giving char * from c_str() to dpopen, valgrind gives an error. 
+            // I'm not sure whether or not it's a bug in QDBM or valgrind for now or
+            // it's my fault.
+            // [workaround]
+            // copy the filename to a temporary buffer and pass the buffer to dpopen.
+            char filename_buf[255];
+            memset(filename_buf, 0, 255);
+            strncpy(filename_buf, filename, strlen(filename));
+
             if (open_flags & DB_RDONLY) {
                 oflags = DP_OREADER;
             }
@@ -43,7 +53,7 @@ namespace Lux {
             if (open_flags & DB_TRUNC) {
                 oflags |= DP_OTRUNC;
             }
-            if (!(depot_ = dpopen(filename, oflags, -1))) {
+            if (!(depot_ = dpopen(filename_buf, oflags, -1))) {
                 return false;
             }
             return true;

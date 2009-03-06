@@ -7,44 +7,127 @@
 
 namespace Lux {
 
-  Searcher::Searcher(std::string storage_dir, DocumentDefinition &doc_def)
-  : lhs_(new LuxHashStorage(storage_dir + "/" + LUX_META_DB, DB_RDONLY)),
-    ds_(new LuxDocStorage(storage_dir, DB_RDONLY, doc_def)),
-    si_(new InvertedIndex(storage_dir, DB_RDONLY, doc_def))
-  {}
+  Searcher::Searcher(Engine &engine)
+  : engine_(engine)
+  {
+    engine_.si->set_sys_cond(RES_W_POS);
+  }
 
   Searcher::~Searcher()
   {}
+
+  void Searcher::set_sys_cond(sys_cond_t sys_cond)
+  {
+    engine_.si->set_sys_cond(sys_cond);
+  }
 
   ResultSet Searcher::search(const char *query, Condition &cond)
   {
     return search(std::string(query), cond);
   }
 
-  ResultSet Searcher::search(std::string query, Condition &cond)
+  ResultSet Searcher::search(const std::string &query, Condition &cond)
   {
-    ResultSet rs;
-    Query *q = QueryParser::parse(query); 
-    IndexResultSet irs = si_->search(q);
-    
-    if (irs.size() <= 0) {
-      return rs;
-    }
+    IndexResultSet irs = search_index(query);
 
-    // calculate where to get results from sorted ones
-    rs.set_result_info(cond.num, cond.page, irs.size());
+    cond.paging.set_total_num(irs.size());
+    cond.paging.calc();
 
-    // sort result by the way specified in cond.sort
-    Sorter sorter(cond.sort, rs.get_base() + rs.get_num());
+    if (irs.size() <= 0) { return ResultSet(cond.paging); }
+
+    set_attrs(irs, cond); // set if specified
+
+    Sorter<IndexResult> sorter(cond.sort, 
+                               cond.paging.get_base() + cond.paging.get_num());
     sorter.sort(irs);
 
+    clear_attrs(irs, cond); // clear if specified
+
+    ResultSet rs(cond.paging);
+    // [FIXME] adding doc_id only and get contents everytime rs.get_next() called
     for (int i = rs.get_base(); i < rs.get_base() + rs.get_num(); ++i) {
-      Document doc = ds_->get(irs.at(i).doc_id);
-      rs.add(Result(doc, irs.at(i).score));
+      Document doc = engine_.ds->get(irs[i].doc_id);
+      if (cond.sort.attr_type == SORT_SCORE) {
+        rs.add(Result(doc, irs[i].score)); // set score only when sorted by score
+      } else {
+        rs.add(Result(doc));
+      }
     }
 
-    delete q;  
     return rs;
+  }
+
+  IndexResultSet Searcher::search_by_server(const char *query, Condition &cond)
+  {
+    return search_by_server(std::string(query), cond);
+  }
+
+  IndexResultSet Searcher::search_by_server(const std::string &query, Condition &cond)
+  {
+    IndexResultSet irs = search_index(query);
+
+    cond.paging.set_total_num(irs.size());
+    cond.paging.calc();
+
+    if (irs.size() <= 0) { return irs; }
+
+    set_attrs(irs, cond); // set if specified
+
+    Sorter<IndexResult> sorter(cond.sort,
+        cond.paging.get_base() + cond.paging.get_num());
+    sorter.sort(irs);
+
+    // [BAD] attributes must be cleared by servers
+
+    return irs;
+  }
+
+  std::string Searcher::getdoc_by_server(doc_id_t doc_id)
+  {
+    return engine_.ds->get_raw(doc_id);
+  }
+
+  IndexResultSet Searcher::search_index(const std::string &query)
+  {
+    Query *q = QueryParser::parse(query);
+    IndexResultSet irs = engine_.si->search(q);
+    delete q;  
+    return irs;
+  }
+
+  void Searcher::set_attrs(IndexResultSet &irs, Condition &cond)
+  {
+    if (cond.sort.attr_type == SORT_SCORE) {
+      return; // nothing to do
+    }
+    AttrIndexEngine aie(cond.sort.attr_name);
+    if (!engine_.ai->get(aie)) {
+      error_log("no such attribute index");
+      cond.sort.attr_type = SORT_SCORE;
+      cond.sort.order_type = DESC;
+      return;
+    }
+
+    // [BAD] attr_size is refered by servers
+    cond.sort.attr_size = aie.attr_size;
+
+    IRSItr itr_end = irs.end();
+    for (IRSItr itr = irs.begin(); itr != itr_end; ++itr) {
+      LuxDataUnit attr;
+      if (aie.engine->get(itr->doc_id, attr)) {
+        attr.set_cleanup_needed(false);
+        itr->attr = (char *) attr.get_data();
+      }
+    }
+  }
+
+  void Searcher::clear_attrs(IndexResultSet &irs, Condition &cond)
+  {
+    if (cond.sort.attr_type == SORT_SCORE) { return; }
+    IRSItr itr_end = irs.end();
+    for (IRSItr itr = irs.begin(); itr != itr_end; ++itr) {
+      delete [] itr->attr;
+    }
   }
 
 }

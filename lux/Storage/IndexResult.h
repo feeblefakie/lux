@@ -7,20 +7,20 @@
 namespace Lux {
 
   struct IndexResult {
-    IndexResult(doc_id_t doc_id_, unsigned int score_)
+    IndexResult(doc_id_t doc_id_, score_t score_)
     : doc_id(doc_id_), score(score_)
     {}
+
+    ~IndexResult(void)
+    {}
+
     doc_id_t doc_id;
-    union {
-      unsigned int score;
-      unsigned int attr;
-    };
-    // Document *d;
-    // any attribute to be sorted
+    score_t score;
+    char *attr;
   };
 
   typedef std::vector<IndexResult> IndexResultSet;
-  typedef IndexResultSet::iterator IRSIterator;
+  typedef IndexResultSet::iterator IRSItr;
 
 }
 

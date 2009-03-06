@@ -29,7 +29,7 @@ namespace Lux {
         bool open(const char *filename, db_flags_t open_flags)
         {
             assert(filename);
-            unsigned int oflags = 0;
+            int oflags = 0;
             if (open_flags & DB_RDONLY) {
                 oflags = CR_OREADER;
             }

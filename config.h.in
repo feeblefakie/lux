@@ -13,6 +13,9 @@
 /* Define to 1 if you have the <dlfcn.h> header file. */
 #undef HAVE_DLFCN_H
 
+/* Define to 1 if fseeko (and presumably ftello) exists and is declared. */
+#undef HAVE_FSEEKO
+
 /* Define to 1 if you have the <functional> header file. */
 #undef HAVE_FUNCTIONAL
 
@@ -25,8 +28,11 @@
 /* Define to 1 if you have the `mecab' library (-lmecab). */
 #undef HAVE_LIBMECAB
 
-/* Define to 1 if you have the `qdbm' library (-lqdbm). */
-#undef HAVE_LIBQDBM
+/* Define to 1 if you have the `protobuf' library (-lprotobuf). */
+#undef HAVE_LIBPROTOBUF
+
+/* Define to 1 if you have the `z' library (-lz). */
+#undef HAVE_LIBZ
 
 /* Define to 1 if you have the <map> header file. */
 #undef HAVE_MAP
@@ -126,8 +132,20 @@
 /* Define to 1 if you can safely include both <sys/time.h> and <time.h>. */
 #undef TIME_WITH_SYS_TIME
 
+/* using zlib */
+#undef USE_ZLIB
+
 /* Version number of package */
 #undef VERSION
+
+/* Number of bits in a file offset, on hosts where this is settable. */
+#undef _FILE_OFFSET_BITS
+
+/* Define to 1 to make fseeko visible on some hosts (e.g. glibc 2.2). */
+#undef _LARGEFILE_SOURCE
+
+/* Define for large files, on AIX-style hosts. */
+#undef _LARGE_FILES
 
 /* Define to empty if `const' does not conform to ANSI C. */
 #undef const
@@ -137,6 +155,9 @@
 #ifndef __cplusplus
 #undef inline
 #endif
+
+/* Define to `long' if <sys/types.h> does not define. */
+#undef off_t
 
 /* Define to `unsigned' if <sys/types.h> does not define. */
 #undef size_t

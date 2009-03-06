@@ -2,6 +2,7 @@
 #define LUX_RESULT_H
 
 #include "lux/lux.h"
+#include "Paging.h"
 #include "lux/Document/Document.h"
 #include <string>
 #include <vector>
@@ -15,14 +16,19 @@ namespace Lux {
   class Result {
 
   public:
-    Result(Document &doc, uint_t score)
+    Result(Document &doc)
+    : doc_(doc), score_(0)
+    {}
+
+    Result(Document &doc, score_t score)
     : doc_(doc), score_(score)
     {}
+
     ~Result() {}
 
     std::string get_id(void)
     {
-      return doc_.get_external_id(); 
+      return doc_.get_eid(); 
     }
 
     std::string get(std::string field_name)
@@ -30,14 +36,14 @@ namespace Lux {
       return doc_.get_by_name(field_name);
     }
 
-    uint_t get_score(void)
+    score_t get_score(void)
     {
       return score_;
     }
 
   private:
     Document doc_;
-    uint_t score_;
+    score_t score_;
   };
 
   typedef std::vector<Result> ResultList;
@@ -49,61 +55,63 @@ namespace Lux {
   class ResultSet {
 
   public:
-    ResultSet()
-    {
-      base_ = 0;
-      num_ = 0;
-      total_num_ = 0;
-    }
-    ~ResultSet() {}
+    ResultSet(void)
+    {}
 
-    void set_result_info(uint_t cond_num, uint_t cond_page, uint_t num_of_result)
-    {
-      total_num_ = num_of_result;
-      uint_t req_num_base = cond_num * cond_page;
-      uint_t req_num = req_num_base + cond_num;
+    ResultSet(uint32_t total_num, uint32_t base, uint32_t num)
+    : total_num_(total_num), base_(base), num_(num)
+    {}
 
-      if (num_of_result > req_num) {
-        base_ = cond_num * cond_page;
-        num_ = cond_num;
-      } else if (num_of_result > req_num_base) {
-        base_ = req_num_base;
-        num_ = num_of_result - req_num_base;
-      } else if (num_of_result > cond_num) {
-        base_ = 0;
-        num_ = cond_num; 
-      } else {
-        base_ = 0;
-        num_ = num_of_result;
-      }
+    ResultSet(Paging &paging)
+    : total_num_(paging.get_total_num()),
+      base_(paging.get_base()),
+      num_(paging.get_num())
+    {}
+
+    ~ResultSet()
+    {}
+
+    void set_total_num(uint32_t total_num)
+    {
+      total_num_ = total_num;
     }
 
-    uint_t get_base(void)
+    void set_base(uint32_t base)
+    {
+      base_ = base;
+    }
+
+    void set_num(uint32_t num)
+    {
+      num_ = num;
+    }
+
+    uint32_t get_base(void)
     { 
       return static_cast<const ResultSet&>(*this).get_base();
     }
 
-    uint_t get_base(void) const
+    uint32_t get_base(void) const
     {
       return base_;
     }
 
-    uint_t get_num(void)
+    uint32_t get_num(void)
     { 
       return static_cast<const ResultSet&>(*this).get_num();
     }
 
-    uint_t get_num(void) const
+    uint32_t get_num(void) const
     {
       return num_;
     }
 
-    uint_t get_total_num(void)
+    uint32_t get_total_num(void)
     { 
       return static_cast<const ResultSet&>(*this).get_total_num();
     }
 
-    uint_t get_total_num(void) const
+    uint32_t get_total_num(void) const
     {
       return total_num_;
     }
@@ -144,9 +152,9 @@ namespace Lux {
   private:
     ResultList result_list_;
     mutable RLIterator rl_iterator_; 
-    uint_t base_; // where the result from
-    uint_t num_;  // the number of results actually retrieved
-    uint_t total_num_;
+    uint32_t total_num_;
+    uint32_t base_;
+    uint32_t num_;
   };
 }
 
