@@ -1,0 +1,44 @@
+package Lux.Config;
+
+message Server {
+    required uint32 id = 1;
+    required string host = 2;
+    required uint32 port = 3;
+    optional uint32 num_default = 4 [default = 10];
+    optional uint32 num_max = 5 [default = 30];
+}
+
+message Cluster {
+    required uint32 id = 1;
+    repeated Server server = 2;
+}
+
+message Clusters {
+    repeated Cluster cluster = 1;
+}
+
+message ProxyMerger {
+    repeated uint32 cluster_id = 1;
+    repeated uint32 merger_id = 2;
+    required Server server = 3;
+}
+
+message ProxyMergers {
+    repeated ProxyMerger proxy_merger = 1;
+}
+
+message Dispatcher {
+    optional uint32 cluster_id = 1;
+    repeated uint32 merger_id = 2;
+    required Server server = 3;
+}
+
+message Dispatchers {
+    repeated Dispatcher dispatcher = 1;
+}
+
+message ServerConfig {
+    required Clusters clusters = 1;
+    optional Dispatchers dispatchers = 2;
+    optional ProxyMergers proxy_mergers = 3;
+}

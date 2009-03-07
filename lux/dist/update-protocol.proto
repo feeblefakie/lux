@@ -1,0 +1,25 @@
+package Lux.Protocol;
+
+message Field {
+   required string name = 1;
+   required string value = 2;
+} 
+
+message Document {
+   required string id = 1;
+   repeated Field field = 2;
+}
+
+message Update {
+    enum UpdateType {
+        ADD = 0;
+        DELETE = 1;
+        ALTER = 2;
+    }
+    required Document document = 1;
+    required UpdateType type = 2;
+}
+
+message Updates {
+    repeated Update update = 1;
+}
