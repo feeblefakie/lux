@@ -12,6 +12,8 @@ namespace Lux {
     static bool parse(std::string service, Config::Document &doc_config);
   private:
     static std::string default_config_dir_;
+
+    static bool is_readable(const char *file);
   };
 }
 

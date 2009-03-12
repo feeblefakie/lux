@@ -39,12 +39,3 @@ liblux_api_include_HEADERS = \
 	api/condition.h api/searcher.h api/indexer.h \
 	api/result.h api/engine.h api/paging.h \
 	api/document_config_parser.h
-
-EXTRA_DIR = dist
-
-dist-hook:
-	for subdir in $(EXTRA_DIR); do \
-		cp -rp $$subdir $(distdir); \
-		rm -rf $(distdir)/$$subdir/.svn; \
-		rm -rf $(distdir)/$$subdir/*/.svn; \
-	done
