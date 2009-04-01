@@ -35,7 +35,7 @@ int main(void)
   std::string line;
   while (getline(std::cin, line)) {
     std::vector<std::string> items;
-    boost::split(items, line, boost::is_any_of("^X"));
+    boost::split(items, line, boost::is_any_of(""));
 
     // invalid input
     if (items.size() != 6) { continue; }
