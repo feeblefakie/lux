@@ -243,6 +243,10 @@ liblux_api_include_HEADERS = \
 	api/result.h api/engine.h api/paging.h \
 	api/document_config_parser.h
 
+EXTRA_DIST = \
+	dist/Makefile dist/*.cpp dist/*.h dist/*.proto \
+	document/document_definition.proto
+
 all: all-am
 
 .SUFFIXES:
@@ -653,7 +657,7 @@ distclean-tags:
 	-rm -f TAGS ID GTAGS GRTAGS GSYMS GPATH tags
 
 distdir: $(DISTFILES)
-	$(mkdir_p) $(distdir)/api $(distdir)/document $(distdir)/index
+	$(mkdir_p) $(distdir)/api $(distdir)/dist $(distdir)/document $(distdir)/index
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \
