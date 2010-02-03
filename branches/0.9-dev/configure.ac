@@ -2,9 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(lux, 0.9, hiroyu@users.sourceforge.net)
+AC_INIT(lux, 0.9.1, hiroyu@users.sourceforge.net)
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(lux, 0.9)
+AM_INIT_AUTOMAKE(lux, 0.9.1)
 
 # Checks for programs.
 AC_PROG_CC
