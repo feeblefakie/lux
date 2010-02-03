@@ -39,3 +39,7 @@ liblux_api_include_HEADERS = \
 	api/condition.h api/searcher.h api/indexer.h \
 	api/result.h api/engine.h api/paging.h \
 	api/document_config_parser.h
+
+EXTRA_DIST = \
+	dist/Makefile dist/*.cpp dist/*.h dist/*.proto \
+	document/document_definition.proto
