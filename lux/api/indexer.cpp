@@ -53,4 +53,34 @@ namespace Lux {
   {
     return add(*doc);
   }
+
+  bool Indexer::del(Document &doc)
+  {
+    // get_id to check if it's registered.
+    // return unless it's registered
+    doc_id_t doc_id;
+    id_status_t status = engine_.pimpl_->im->set_id(doc, false);
+    if (status == UNREGISTERED) {
+      return true;
+    } else {
+      // MUST BE REGISTERED
+      
+      // these 1,2 must be done successfully
+      // 1. update delete vector (to value 1) # also, update delete vector when adding. (to value 0)
+      // 2. im->del 
+
+      // these 3,4,5 can be failed. won't care if succeeded or not.
+      // 3. ds->del (it saves some space for the releasing value. key(doc_id) is never used.)
+      // 4. si->del (it's meaningless because don't have doc_id->terms relations, so nothing is done in the method.)
+      // 5. ai->del (it's meaningless because it's clustered index. so nothing is done in the method.)
+    }
+
+    return true;
+  }
+
+  bool Indexer::del(Document *doc)
+  {
+    return del(*doc);
+  }
+
 }

@@ -16,6 +16,8 @@ namespace Lux {
     void set_index_buffer_threshold(uint32_t mega_bytes);
     bool add(Document &doc);
     bool add(Document *doc);
+    bool del(Document &doc);
+    bool del(Document *doc);
 
   private:
     Engine engine_;
