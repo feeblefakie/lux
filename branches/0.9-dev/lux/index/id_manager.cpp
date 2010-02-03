@@ -45,12 +45,12 @@ namespace Lux {
     return true;
   }
 
-  id_status_t IDManager::set_id(Document *doc)
+  id_status_t IDManager::set_id(Document *doc, bool create_if_new)
   {
-    return set_id(*doc);
+    return set_id(*doc, create_if_new);
   }
 
-  id_status_t IDManager::set_id(Document &doc)
+  id_status_t IDManager::set_id(Document &doc, bool create_if_new)
   {
     id_status_t id_status;
     LuxDataUnit iid;
@@ -58,24 +58,27 @@ namespace Lux {
     LuxDataUnit eid(const_cast<char *>(e.c_str()), e.size());
 
     if (manager_->get(eid, iid)) {
-      id_status = REGISTERED;
       doc.set_id(*(doc_id_t *) iid.get_data());
-    } else {
-      ++curr_id_;
-      iid.set((void *) &curr_id_, sizeof(doc_id_t));
-      if (!manager_->put(eid, iid)) {
-        id_status = FAILED;
-        return id_status;
-      }
-      id_status = NEW;
-      doc.set_id(curr_id_);
-
-      LuxDataUnit id_val(&curr_id_, sizeof(doc_id_t));
-      if (!manager_->put(id_key_, id_val)) {
-        error_log("update id failed.");
-      }
+      return REGISTERED;
     }
-    return id_status;
+    if (!create_if_new) {
+      return UNREGISTERED;
+    }
+
+    ++curr_id_;
+    iid.set((void *) &curr_id_, sizeof(doc_id_t));
+    if (!manager_->put(eid, iid)) {
+      return FAILED;
+    }
+    doc.set_id(curr_id_);
+
+    LuxDataUnit id_val(&curr_id_, sizeof(doc_id_t));
+    if (!manager_->put(id_key_, id_val)) {
+      error_log("update id failed.");
+      manager_->del(eid);
+      return FAILED;
+    }
+    return CREATED;
   }
 
 }

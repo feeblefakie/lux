@@ -23,8 +23,8 @@ namespace Lux {
     ~IDManager();
     bool open(std::string dir, db_flags_t oflags = DB_CREAT);
     bool close(void);
-    id_status_t set_id(Document *doc);
-    id_status_t set_id(Document &doc);
+    id_status_t set_id(Document *doc, bool create_if_new = true);
+    id_status_t set_id(Document &doc, bool create_if_new = true);
 
   private:
     doc_id_t curr_id_;

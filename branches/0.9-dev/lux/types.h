@@ -19,8 +19,9 @@ namespace Lux {
   } sys_cond_t;
 
   typedef enum {
-    NEW,
+    CREATED,
     REGISTERED,
+    UNREGISTERED,
     FAILED
   } id_status_t;
 
