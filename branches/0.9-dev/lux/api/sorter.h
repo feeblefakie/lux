@@ -53,14 +53,29 @@ namespace Lux {
       }
   };
 
+  /**
+   * sorter interface
+   */
   template <class T>
   class Sorter {
 
   public:
+    /**
+     * constructor
+     * @param sort SortCondition object
+     * @param num_of_sorted the number of records to be sorted
+     */
     Sorter(SortCondition sort, uint32_t num_of_sorted)
     : sort_(sort), num_of_sorted_(num_of_sorted)
     {}
+    /**
+     * destructor
+     */
     ~Sorter(void) {}
+    /**
+     * sort records
+     * @
+     */
     void sort(std::vector<T> &rs)
     {
       /**

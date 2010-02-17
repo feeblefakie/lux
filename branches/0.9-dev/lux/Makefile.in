@@ -70,9 +70,9 @@ am_liblux_la_OBJECTS = mecab_ma.lo term.lo term_query.lo \
 	attr_index_array.lo doc_storage_array.lo id_manager.lo \
 	inverted_index.lo indexer.lo searcher.lo engine.lo \
 	query_parser.lo document_config_parser.lo paging.lo result.lo \
-	condition.lo document.lo document_definition.pb.lo \
-	document_serializer.lo luxio_btree.lo luxio_array.lo \
-	luxio_data_unit.lo
+	condition.lo batch_indexer.lo document.lo \
+	document_definition.pb.lo document_serializer.lo \
+	luxio_btree.lo luxio_array.lo luxio_data_unit.lo
 liblux_la_OBJECTS = $(am_liblux_la_OBJECTS)
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
 depcomp = $(SHELL) $(top_srcdir)/depcomp
@@ -216,9 +216,11 @@ liblux_la_SOURCES = lexer/lexer.h lexer/mecab_ma.h lexer/mecab_ma.cpp lexer/term
 					index/id_manager.h index/id_manager.cpp index/search_index.h \
 					index/inverted_index.h index/inverted_index.cpp index/inverted_index_core.h \
 					index/normalizer.h index/boolean_merger.h index/vbc.h index/posting.h \
+					index/in_memory_index.h \
                     api/indexer.cpp api/searcher.cpp api/engine.cpp api/engine-impl.h \
 					api/query_parser.h api/query_parser.cpp api/document_config_parser.cpp \
 					api/paging.cpp api/result.cpp api/condition.cpp api/sorter.h \
+					api/batch_indexer.h api/batch_indexer.cpp api/batch_indexer-impl.h \
 					document/document.cpp document/document_definition.pb.cpp \
 					document/document_serializer.h document/document_serializer.cpp \
 					storage/storage_engine.h storage/data_unit.h \
@@ -239,7 +241,7 @@ liblux_index_include_HEADERS = \
 
 liblux_api_includedir = $(liblux_includedir)/api
 liblux_api_include_HEADERS = \
-	api/condition.h api/searcher.h api/indexer.h \
+	api/condition.h api/searcher.h api/indexer.h api/batch_indexer.h \
 	api/result.h api/engine.h api/paging.h \
 	api/document_config_parser.h
 
@@ -317,6 +319,7 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/attr_index_array.Plo@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/batch_indexer.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/boolean_query.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/condition.Plo@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/doc_storage_array.Plo@am__quote@
@@ -487,6 +490,13 @@ condition.lo: api/condition.cpp
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='api/condition.cpp' object='condition.lo' libtool=yes @AMDEPBACKSLASH@
 @AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
 @am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o condition.lo `test -f 'api/condition.cpp' || echo '$(srcdir)/'`api/condition.cpp
+
+batch_indexer.lo: api/batch_indexer.cpp
+@am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT batch_indexer.lo -MD -MP -MF "$(DEPDIR)/batch_indexer.Tpo" -c -o batch_indexer.lo `test -f 'api/batch_indexer.cpp' || echo '$(srcdir)/'`api/batch_indexer.cpp; \
+@am__fastdepCXX_TRUE@	then mv -f "$(DEPDIR)/batch_indexer.Tpo" "$(DEPDIR)/batch_indexer.Plo"; else rm -f "$(DEPDIR)/batch_indexer.Tpo"; exit 1; fi
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	source='api/batch_indexer.cpp' object='batch_indexer.lo' libtool=yes @AMDEPBACKSLASH@
+@AMDEP_TRUE@@am__fastdepCXX_FALSE@	DEPDIR=$(DEPDIR) $(CXXDEPMODE) $(depcomp) @AMDEPBACKSLASH@
+@am__fastdepCXX_FALSE@	$(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -c -o batch_indexer.lo `test -f 'api/batch_indexer.cpp' || echo '$(srcdir)/'`api/batch_indexer.cpp
 
 document.lo: document/document.cpp
 @am__fastdepCXX_TRUE@	if $(LIBTOOL) --tag=CXX --mode=compile $(CXX) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(AM_CPPFLAGS) $(CPPFLAGS) $(AM_CXXFLAGS) $(CXXFLAGS) -MT document.lo -MD -MP -MF "$(DEPDIR)/document.Tpo" -c -o document.lo `test -f 'document/document.cpp' || echo '$(srcdir)/'`document/document.cpp; \
