@@ -1,0 +1,12 @@
+How to use
+
+# build
+% make
+
+# index blog posts (url as an ID and title)
+% ./index blogs < posts
+
+# try search
+% ./search blogs google
+% ./search blogs "google AND search"
+% ./search blogs "google OR search"
