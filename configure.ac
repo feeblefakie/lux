@@ -75,6 +75,17 @@ then
   ZLIB_LIBS="-lz"
 fi
 
+AC_ARG_ENABLE(debug, [ --enable-debug trun on debugging [default no]],,enable_debug=no)
+  AC_MSG_CHECKING(whether to enable debuging)
+    if test x$enable_debug = xyes; then
+      AC_MSG_RESULT(yes)
+      AC_DEFINE(DEBUG,[],[for debugging])
+      CXXFLAGS="-g -O0"
+      CFLAGS="-g -O0"
+    else
+      AC_MSG_RESULT(no)
+    fi 
+
 LUX_LIBS="$LUXIO_LIBS $MECAB_LIBS $PROTOBUF_LIBS $QDBM_LIBS $ZLIB_LIBS"
 AC_SUBST(LUX_LIBS)
 

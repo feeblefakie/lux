@@ -1,8 +1,11 @@
-bin=index search
+bin=index bindex search
 all: $(bin)
 
 index: index.cpp
 	g++ -g $< -o $@ -I. -L./lux/.libs -llux -O2
+
+bindex: bindex.cpp
+	g++ -g $< -o $@ -I. -L./lux/.libs -llux 
 
 search: search.cpp
 	g++ -g $< -o $@ -I. -L./lux/.libs -llux -O2

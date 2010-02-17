@@ -12,9 +12,20 @@ namespace Lux {
     std::string phrase;
   };
 
+  /**
+   * QueryParser
+   */
   class QueryParser {
   public:
+    /**
+     * parse query
+     * @param query pointer to query  
+     */
     static Query *parse(const char *query);
+    /**
+     * parse query
+     * @param query query object 
+     */
     static Query *parse(std::string query);
 
   private:

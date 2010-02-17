@@ -12,9 +12,11 @@ liblux_la_SOURCES = lexer/lexer.h lexer/mecab_ma.h lexer/mecab_ma.cpp lexer/term
 					index/id_manager.h index/id_manager.cpp index/search_index.h \
 					index/inverted_index.h index/inverted_index.cpp index/inverted_index_core.h \
 					index/normalizer.h index/boolean_merger.h index/vbc.h index/posting.h \
+					index/in_memory_index.h \
                     api/indexer.cpp api/searcher.cpp api/engine.cpp api/engine-impl.h \
 					api/query_parser.h api/query_parser.cpp api/document_config_parser.cpp \
 					api/paging.cpp api/result.cpp api/condition.cpp api/sorter.h \
+					api/batch_indexer.h api/batch_indexer.cpp api/batch_indexer-impl.h \
 					document/document.cpp document/document_definition.pb.cpp \
 					document/document_serializer.h document/document_serializer.cpp \
 					storage/storage_engine.h storage/data_unit.h \
@@ -36,7 +38,7 @@ liblux_index_include_HEADERS = \
 
 liblux_api_includedir = $(liblux_includedir)/api
 liblux_api_include_HEADERS = \
-	api/condition.h api/searcher.h api/indexer.h \
+	api/condition.h api/searcher.h api/indexer.h api/batch_indexer.h \
 	api/result.h api/engine.h api/paging.h \
 	api/document_config_parser.h
 
