@@ -1,6 +1,11 @@
-all: index.cpp search.cpp
-	g++ -o index index.cpp -L/usr/local/lib -llux
-	g++ -o search search.cpp -L/usr/local/lib -llux
+bin=index search
+all: $(bin)
+
+index: index.cpp
+	g++ -g $< -o $@ -I. -L./lux/.libs -llux -O2
+
+search: search.cpp
+	g++ -g $< -o $@ -I. -L./lux/.libs -llux -O2
 
 clean:
-	rm -f *.o index search
+	rm -f *.o $(bin)

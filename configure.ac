@@ -2,9 +2,9 @@
 # Process this file with autoconf to produce a configure script.
 
 AC_PREREQ(2.59)
-AC_INIT(lux, 0.1, mogwaing@gmail.com)
+AC_INIT(lux, 0.9.1, hiroyu@users.sourceforge.net)
 AC_CONFIG_HEADER([config.h])
-AM_INIT_AUTOMAKE(lux, 0.1)
+AM_INIT_AUTOMAKE(lux, 0.9.1)
 
 # Checks for programs.
 AC_PROG_CC
@@ -41,20 +41,41 @@ AC_C_CONST
 AC_C_INLINE
 AC_TYPE_SIZE_T
 AC_HEADER_TIME
+AC_SYS_LARGEFILE
+AC_FUNC_FSEEKO
+AC_TYPE_OFF_T
 
 # Checks for library functions.
 AC_HEADER_STDC
 AC_CHECK_FUNCS([gettimeofday mkdir strstr])
 
 # Checks for libraries
+AC_CHECK_LIB(luxio, main, [],[echo "libluxio is not found"; exit 1])
+LUXIO_CFLAGS=""
+LUXIO_LIBS="-lluxio"
+
 AC_CHECK_LIB(mecab, mecab_new, [],[echo "libmecab is not found"; exit 1])
 MECAB_CFLAGS=""
 MECAB_LIBS="-lmecab -lstdc++"
-AC_CHECK_LIB(qdbm, dpopen, [],[echo "libqdbm is not found"; exit 1])
-QDBM_CFLAGS=""
-QDBM_LIBS="-lqdbm"
+#AC_CHECK_LIB(qdbm, dpopen, [],[echo "libqdbm is not found"; exit 1])
+#QDBM_CFLAGS=""
+#QDBM_LIBS="-lqdbm"
 
-LUX_LIBS="$MECAB_LIBS $QDBM_LIBS"
+AC_CHECK_LIB(protobuf, main, [],[echo "libprotobuf is not found"; exit 1])
+PROTOBUF_CFLAGS=""
+PROTOBUF_LIBS="-lprotobuf"
+
+# zlib
+AC_ARG_ENABLE(zlib,
+  AC_HELP_STRING([--enable-zlib], [use zlib for data compression.]))
+if test "$enable_zlib" = "yes"
+then
+  AC_CHECK_LIB(z, main)
+  AC_DEFINE(USE_ZLIB, [1], [using zlib])
+  ZLIB_LIBS="-lz"
+fi
+
+LUX_LIBS="$LUXIO_LIBS $MECAB_LIBS $PROTOBUF_LIBS $QDBM_LIBS $ZLIB_LIBS"
 AC_SUBST(LUX_LIBS)
 
 AC_OUTPUT(Makefile lux/Makefile)

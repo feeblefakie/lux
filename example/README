@@ -4,9 +4,9 @@ How to use
 % make
 
 # index blog posts (url as an ID and title)
-% ./index < posts
+% ./index blogs < posts
 
 # try search
-% ./search google
-% ./search "google AND search"
-% ./search "google OR search"
+% ./search blogs google
+% ./search blogs "google AND search"
+% ./search blogs "google OR search"

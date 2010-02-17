@@ -1,0 +1,26 @@
+package Lux.Config;
+
+message Field {
+    message Index {
+        required bool indexing = 1;
+        required string index_to = 2 [default = "default"];
+        optional bool exact = 3 [default = false];
+    }
+    enum AttrIndexType {
+        STRING = 0;
+        INT = 1;
+    }
+    message AttrIndex {
+        required bool indexing = 1 [default = false];
+        required AttrIndexType type = 2;
+        required uint32 size = 3;
+    }
+    required string name = 1;
+    optional Index index = 2; 
+    optional bool display = 3 [default = false];
+    optional AttrIndex attr_index = 4;
+}
+
+message Document {
+    repeated Field field = 1;
+}
