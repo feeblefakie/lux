@@ -2,7 +2,8 @@
 #define LUX_INDEX_INMEMORYINDEX_H
 
 #include "lux/lux.h"
-#include "lux/index/posting.h"
+#include "lux/util.h"
+#include "lux/index/vbc.h"
 #include "lux/index/normalizer.h"
 #include "lux/document/document_definition.pb.h"
 #include "lux/document/document.h"
@@ -95,7 +96,7 @@ namespace TMP { // temporary namespace
       TBIterator tb_itr_end = term_buffer_set.end();
       for (TBIterator tb_itr = term_buffer_set.begin();
            tb_itr != tb_itr_end; ++tb_itr) {
-
+        
         TBIterator tb_itr2 = const_cast<TermBufferSet&>(ib_itr->term_buffer_set).find(*tb_itr);
         if (tb_itr2 == ib_itr->term_buffer_set.end()) {
           const_cast<TermBufferSet&>(ib_itr->term_buffer_set).insert(*tb_itr);
@@ -133,7 +134,7 @@ namespace TMP { // temporary namespace
 
     std::string get_next_index_to(void)
     {
-      return ib_itr_->index_to;
+      return (ib_itr_++)->index_to;
     }
 
     TermBufferSet get_term_buffer_set(std::string &index_to)
@@ -336,7 +337,7 @@ namespace TMP { // temporary namespace
       return index_buffer_set_->has_next();
     }
 
-    std::string get_next_indx_to(void)
+    std::string get_next_index_to(void)
     {
       return index_buffer_set_->get_next_index_to();
     }

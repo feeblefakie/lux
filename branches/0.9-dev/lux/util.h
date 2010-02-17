@@ -54,7 +54,7 @@ namespace Lux {
     }
   }
 
-  static inline int _open(const char *pathname, int flags, mode_t mode)
+  static inline int _open(const char *pathname, int flags, mode_t mode = 00644)
   {
     int oflags = O_RDONLY;
 
@@ -69,6 +69,11 @@ namespace Lux {
       oflags |= O_TRUNC;
     }
     return ::open(pathname, oflags, mode);
+  }
+
+  static inline int _close(int fd)
+  {
+    return ::close(fd);
   }
   
   static inline ssize_t _read(int fd, void *buf, size_t count)
