@@ -8,12 +8,39 @@
 #elif HAVE_BOOST_SHARED_PTR_HPP
 #include <boost/shared_ptr.hpp>
 #endif
+#include <vector>
 
 namespace Lux {
 
   class Document;
   class BatchIndexerImpl;
   namespace Config { class Document; }
+
+  struct term_list {
+    term_list(char *term_, size_t term_size_,
+              char *list_, size_t list_size_, uint32_t idx_)
+    : term(term_), term_size(term_size_),
+      list(list_), list_size(list_size_), idx(idx_)
+    {}  
+
+    char *term;
+    size_t term_size;
+    char *list;
+    size_t list_size;
+    uint32_t idx;
+  };
+
+  class greater_term : public std::binary_function<term_list, term_list, bool>
+  {
+    public:
+    result_type operator() (first_argument_type &a, second_argument_type &b) 
+    {
+      return (result_type)((strcmp(a.term, b.term) > 0) ? 1 : 0);
+    }
+  };
+
+  typedef std::vector<term_list> TLA;
+  typedef TLA::iterator TLAITR;
 
   /**
    * indexer interface
@@ -33,7 +60,7 @@ namespace Lux {
     /**
      * open a BatchIndexer
      */
-    bool open(std::string dir, db_flags_t oflags);
+    bool open(std::string dir);
     /**
      * close a BatchIndexer
      */
@@ -66,7 +93,11 @@ namespace Lux {
     boost::shared_ptr<BatchIndexerImpl> pimpl_;
 #endif
     uint32_t index_buffer_threshold_;
+    uint32_t flush_counter_;
+    std::string dir_;
 
+    bool flush(void);
+    bool get_records(TLA &tla, int *fds, off_t *offs, uint32_t idx, uint32_t num);
   };
 }
 
